@@ -1,0 +1,112 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Guide Food Thailand</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+ integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+ crossorigin="" />
+ <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+ 
+ <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+ integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+ crossorigin=""></script>
+ <style>
+ #mapid {
+ height: 800px;
+ }
+ </style>
+</head>
+<body>
+    <div class="w3-row">
+        <div id="mapid" class="w3-half"></div>
+        <div id="content" class="w3-half">
+        <table class="w3-table w3-striped">
+        <tr>
+        <th>ชื่อแหล่งอาหาร</th>
+        <th>อาหารประเภท</th>
+        <th>คะแนนรีวิว</th>
+        </tr>
+        <tr>
+        </tr>
+        </table>
+        </div>
+        </div>
+
+<script src = "foodthailand.js"></script>
+
+
+
+
+
+<script>
+var map = L.map("mapid").setView([13.742872242996139, 100.5504012663428], 8);
+ 
+ var osm = L.tileLayer(
+ "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+ ).addTo(map);
+ var gsat = L.tileLayer(
+ "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
+ ).addTo(map);
+ 
+ var baseMaps = {
+ OSM: osm,
+ GoogleSat: gsat,
+ };
+
+  var foodLayer = L.geoJSON(foodthailand, {
+ pointToLayer: function (feature, latlng) {
+ return L.marker(latlng).bindPopup(feature.properties.ชื่อแหล่งร้านอาหาร);
+ },
+ onEachFeature: function (feature, layer) {
+ layer.on("mouseover", function () {
+ document
+ .getElementById(feature.properties.name)
+ .classList.add("w3-red");
+ });
+ 
+ layer.on("mouseout", function () {
+ document
+ .getElementById(feature.properties.name)
+ .classList.remove("w3-red");
+ });
+ 
+ },
+ 
+}).addTo(map);
+ 
+ var cont = "";
+ cont += "<table class='w3-table w3-striped'>";
+ cont += "<tr>";
+ cont += "<th>ชื่อแหล่งร้านอาหาร</th>";
+ cont += "<th>อาหารประเภท</th>";
+ cont += "<th>คะแนนรีวิว</th>";
+ cont += "</tr>";
+ for (let i in foodthailand.features) {
+ cont += "<tr id=" + foodthailand.features[i].properties.name + ">";
+ cont += "<td>" + foodthailand.features[i].properties.ชื่อแหล่งร้านอาหาร + "</td>";
+ cont += "<td>" + foodthailand.features[i].properties.อาหารประเภท + "</td>";
+ cont += "<td>" + foodthailand.features[i].properties.คะแนนรีวิว + "</td>";
+ cont += "</tr>";
+ }
+ cont += "</table>";
+ console.log(cont);
+ document.getElementById("content").innerHTML = cont;
+
+ 
+
+ var overlays = {Distinct : tourLayer};
+ 
+ L.control.layers(baseMaps, overlays).addTo(map);
+ 
+
+
+
+</script>
+
+
+
+
+</body>
+</html>
